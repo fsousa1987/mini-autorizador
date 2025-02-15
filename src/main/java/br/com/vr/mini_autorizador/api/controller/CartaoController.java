@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/cartoes")
 @RequiredArgsConstructor
@@ -20,9 +22,14 @@ public class CartaoController {
     private final CartaoService cartaoService;
 
     @PostMapping
-    public ResponseEntity<CartaoResponse> createCard(@RequestBody @Valid CartaoRequest cartaoRequest) {
-        CartaoResponse cartaoResponse = cartaoService.criarCartao(cartaoRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartaoResponse);
+    public ResponseEntity<CartaoResponse> criarCartao(@RequestBody @Valid CartaoRequest cartaoRequest) {
+        Optional<CartaoResponse> cartaoResponse = cartaoService.verificarSeCartaoExiste(cartaoRequest);
+        if (cartaoResponse.isPresent()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(cartaoResponse.get());
+        }
+
+        CartaoResponse novoCartao = cartaoService.criarCartao(cartaoRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
     }
 
 }

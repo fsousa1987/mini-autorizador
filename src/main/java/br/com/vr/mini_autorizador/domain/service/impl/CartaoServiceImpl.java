@@ -1,6 +1,6 @@
 package br.com.vr.mini_autorizador.domain.service.impl;
 
-import br.com.vr.mini_autorizador.api.exceptionhandler.exceptions.CartaoJaExistenteException;
+import br.com.vr.mini_autorizador.core.mapper.Mapper;
 import br.com.vr.mini_autorizador.domain.dto.request.CartaoRequest;
 import br.com.vr.mini_autorizador.domain.dto.response.CartaoResponse;
 import br.com.vr.mini_autorizador.domain.model.CartaoEntity;
@@ -10,24 +10,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
-import static br.com.vr.mini_autorizador.core.mapper.Mapper.transformarCartaoEntityEmCartaoResponse;
-import static br.com.vr.mini_autorizador.core.mapper.Mapper.transformarCartaoRequestEmCartaoEntity;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CartaoServiceImpl implements CartaoService {
 
     private final CartaoRepository cartaoRepository;
+    private final Mapper mapper;
 
     @Override
     public CartaoResponse criarCartao(CartaoRequest cartaoRequest) {
-        verificarSeCartaoExiste(cartaoRequest.numeroCartao());
-        CartaoEntity cartaoEntity = transformarCartaoRequestEmCartaoEntity(cartaoRequest);
+        CartaoEntity cartaoEntity = mapper.transformarCartaoRequestEmCartaoEntity(cartaoRequest);
 
         cartaoEntity = cartaoRepository.save(cartaoEntity);
 
-        return transformarCartaoEntityEmCartaoResponse(cartaoEntity);
+        return mapper.transformarCartaoEntityEmCartaoResponse(cartaoEntity);
     }
 
     @Override
@@ -35,12 +33,10 @@ public class CartaoServiceImpl implements CartaoService {
         return null;
     }
 
-    private void verificarSeCartaoExiste(String cardNumber) {
-        cartaoRepository
-                .findById(cardNumber)
-                .ifPresent(cartaoEntity -> {
-                    throw new CartaoJaExistenteException("Cartão com o número [%s] já existe".formatted(cardNumber));
-                });
+    @Override
+    public Optional<CartaoResponse> verificarSeCartaoExiste(CartaoRequest cartaoRequest) {
+        return cartaoRepository.findById(cartaoRequest.numeroCartao())
+                .map(mapper::transformarCartaoEntityEmCartaoResponse);
     }
 
 }

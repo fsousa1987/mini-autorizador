@@ -1,12 +1,10 @@
 package br.com.vr.mini_autorizador.api.exceptionhandler;
 
 import br.com.vr.mini_autorizador.api.exceptionhandler.enums.TipoProblema;
-import br.com.vr.mini_autorizador.api.exceptionhandler.exceptions.CartaoJaExistenteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -14,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -33,18 +30,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull WebRequest request) {
 
         return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
-    }
-
-    @ExceptionHandler(CartaoJaExistenteException.class)
-    public ResponseEntity<?> handleCartaoJaExistenteException(CartaoJaExistenteException ex, WebRequest request) {
-
-        var status = HttpStatus.UNPROCESSABLE_ENTITY;
-        var problemType = TipoProblema.RECURSO_JA_EXISTE;
-        var detail = ex.getMessage();
-
-        var problem = createProblemBuilder(status, problemType, detail).build();
-
-        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
     private Problema.ProblemaBuilder createProblemBuilder(HttpStatusCode status, TipoProblema tipoProblema, String detail) {

@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class Mapper {
 
-    public static CartaoEntity transformarCartaoRequestEmCartaoEntity(CartaoRequest cartaoRequest) {
+    public CartaoEntity transformarCartaoRequestEmCartaoEntity(CartaoRequest cartaoRequest) {
         CartaoEntity cartaoEntity = new CartaoEntity();
         cartaoEntity.setNumeroCartao(cartaoRequest.numeroCartao());
         cartaoEntity.setSenha(cartaoRequest.senha());
         return cartaoEntity;
     }
 
-    public static CartaoResponse transformarCartaoEntityEmCartaoResponse(CartaoEntity cartaoEntity) {
+    public CartaoResponse transformarCartaoEntityEmCartaoResponse(CartaoEntity cartaoEntity) {
         return new CartaoResponse(cartaoEntity.getSenha(), cartaoEntity.getNumeroCartao());
     }
 
