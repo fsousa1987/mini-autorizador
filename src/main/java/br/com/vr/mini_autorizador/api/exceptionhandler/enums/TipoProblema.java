@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum TipoProblema {
 
-    RECURSO_JA_EXISTE("Recurso já existe");
+    RECURSO_JA_EXISTE("Recurso já existe"),
+    DADOS_INVALIDOS("Dados inválidos");
 
     private final String title;
 
