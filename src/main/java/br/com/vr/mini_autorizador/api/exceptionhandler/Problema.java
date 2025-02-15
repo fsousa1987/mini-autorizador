@@ -14,11 +14,11 @@ public class Problema {
 
     private final Integer status;
     private final OffsetDateTime timestamp;
-    private final String type;
-    private final String title;
-    private final String detail;
-    private final String userMessage;
-    private final List<Object> objects;
+    private final String tipo;
+    private final String titulo;
+    private final String detalhe;
+    private final String mensagemParaUsuario;
+    private final List<Object> objetos;
 
     @Getter
     @Builder

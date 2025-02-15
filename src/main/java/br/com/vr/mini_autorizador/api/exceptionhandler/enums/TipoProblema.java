@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum TipoProblema {
 
     RECURSO_JA_EXISTE("Recurso já existe"),
+    RECURSO_NAO_EXISTE("Cartão inexistente"),
     DADOS_INVALIDOS("Dados inválidos");
 
     private final String title;
