@@ -2,17 +2,13 @@ package br.com.vr.mini_autorizador.api.controller;
 
 import br.com.vr.mini_autorizador.domain.dto.request.CartaoRequest;
 import br.com.vr.mini_autorizador.domain.dto.response.CartaoResponse;
+import br.com.vr.mini_autorizador.domain.dto.response.SaldoResponse;
 import br.com.vr.mini_autorizador.domain.service.CartaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -23,13 +19,17 @@ public class CartaoController {
 
     @PostMapping
     public ResponseEntity<CartaoResponse> criarCartao(@RequestBody @Valid CartaoRequest cartaoRequest) {
-        Optional<CartaoResponse> cartaoResponse = cartaoService.verificarSeCartaoExiste(cartaoRequest);
-        if (cartaoResponse.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(cartaoResponse.get());
-        }
+        return cartaoService.verificarSeCartaoExiste(cartaoRequest)
+                .map(cartao -> ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(cartao))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(cartaoService.criarCartao(cartaoRequest)));
+    }
 
-        CartaoResponse novoCartao = cartaoService.criarCartao(cartaoRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
+    @GetMapping("/{numeroCartao}")
+    public ResponseEntity<SaldoResponse> verificarSaldo(@PathVariable String numeroCartao) {
+        return cartaoService.verificarSaldo(numeroCartao)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 }
