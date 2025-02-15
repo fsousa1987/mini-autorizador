@@ -1,4 +1,4 @@
-package br.com.vr.mini_autorizador.entity;
+package br.com.vr.mini_autorizador.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,20 +12,20 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "card")
+@Table(name = "cartao")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Card {
+public class CartaoEntity {
 
     @Id
-    private String cardNumber;
+    private String numeroCartao;
 
     @Column(nullable = false)
-    private String password;
+    private String senha;
 
     @Column(nullable = false)
-    private BigDecimal balance = BigDecimal.valueOf(500.00);
+    private BigDecimal saldo = BigDecimal.valueOf(500.00);
 
 }
