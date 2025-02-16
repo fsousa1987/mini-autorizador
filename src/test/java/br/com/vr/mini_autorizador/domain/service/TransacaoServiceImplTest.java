@@ -45,14 +45,14 @@ public class TransacaoServiceImplTest {
 
     @Test
     void deveProcessarTransacaoComSucesso() {
-        TransacaoRequest request = new TransacaoRequest("1234567890123456", "1234", BigDecimal.valueOf(100));
+        TransacaoRequest request = new TransacaoRequest("6549873025634501", "1234", BigDecimal.valueOf(100));
         CartaoEntity cartao = criarUmCartaoEntity();
 
         when(cartaoRepository.findByNumeroCartao(request.numeroCartao())).thenReturn(Optional.of(cartao));
 
         transacaoService.processarTransacao(request);
 
-        assertEquals(BigDecimal.valueOf(400), cartao.getSaldo()); // ✅ O saldo foi debitado corretamente
+        assertEquals(BigDecimal.valueOf(400), cartao.getSaldo());
         verify(cartaoRepository, times(1)).save(cartao);
     }
 
@@ -67,7 +67,7 @@ public class TransacaoServiceImplTest {
 
     @Test
     void deveLancarExcecaoQuandoSenhaInvalida() {
-        TransacaoRequest request = new TransacaoRequest("1234567890123456", "0000", BigDecimal.valueOf(100));
+        TransacaoRequest request = new TransacaoRequest("6549873025634501", "0000", BigDecimal.valueOf(100));
         CartaoEntity cartao = criarUmCartaoEntity();
 
         when(cartaoRepository.findByNumeroCartao(request.numeroCartao())).thenReturn(Optional.of(cartao));

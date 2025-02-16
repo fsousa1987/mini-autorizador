@@ -8,7 +8,7 @@ public class TransacaoFactory {
 
     public static TransacaoRequest criarUmaTransacaoRequest() {
         return TransacaoRequest.builder()
-                .numeroCartao("1234567890123456")
+                .numeroCartao("6549873025634501")
                 .senhaCartao("1234")
                 .valor(BigDecimal.valueOf(1000))
                 .build();

@@ -55,7 +55,7 @@ public class CartaoServiceImplTest {
         CartaoResponse response = cartaoService.criarCartao(request);
 
         assertNotNull(response);
-        assertEquals("1234567890123456", response.numeroCartao());
+        assertEquals("6549873025634501", response.numeroCartao());
         verify(cartaoRepository, times(1)).save(any(CartaoEntity.class));
     }
 
@@ -69,16 +69,16 @@ public class CartaoServiceImplTest {
         Optional<CartaoResponse> result = cartaoService.verificarSeCartaoExiste(request);
 
         assertTrue(result.isPresent());
-        assertEquals("1234567890123456", result.get().numeroCartao());
+        assertEquals("6549873025634501", result.get().numeroCartao());
     }
 
     @Test
     void deveRetornarSaldoCorreto() {
         CartaoEntity entity = criarUmCartaoEntity();
 
-        when(cartaoRepository.findById("1234567890123456")).thenReturn(Optional.of(entity));
+        when(cartaoRepository.findById("6549873025634501")).thenReturn(Optional.of(entity));
 
-        Optional<SaldoResponse> saldoResponse = cartaoService.verificarSaldo("1234567890123456");
+        Optional<SaldoResponse> saldoResponse = cartaoService.verificarSaldo("6549873025634501");
 
         saldoResponse.ifPresent(valor -> assertEquals(BigDecimal.valueOf(500), valor.saldo()));
     }
