@@ -1,148 +1,112 @@
-#Teste de programação - VR Benefícios
+### 📌 **README.md para o Mini Autorizador**
 
-Como parte do processo de seleção, gostaríamos que você desenvolvesse um pequeno sistema, para que possamos ver melhor o seu trabalho.
+# 🏦 Mini Autorizador VR
 
-Essa solução precisa ser desenvolvida usando Java, mas não necessariamente a versão mais recente. Use o Maven também. Dê preferência ao Spring Boot como framework principal.
+🚀 Projeto de um **Mini Autorizador** de transações baseado no desafio técnico da **VR**.  
+Este sistema permite **criação de cartões, consulta de saldo e processamento de transações**, garantindo regras de autorização e concorrência segura.
 
-Fique à vontade para criar a partir dos requisitos abaixo. Se algo não ficou claro, pode assumir o que ficar mais claro para você, e, por favor, *documente suas suposições* no README do projeto.
+---
 
-Crie o projeto no seu Github para que possamos ver os passos realizados (por meio dos commits) para a implementação da solução.
+## 📜 **Requisitos Atendidos**
+✔ **Criar cartões** com saldo inicial de **R$500,00**  
+✔ **Consultar saldo** de um cartão existente  
+✔ **Realizar transações**, garantindo regras de autorização  
+✔ **Segurança** com **Basic Auth**  
+✔ **Concorrência controlada** para evitar saldo negativo em múltiplas transações simultâneas  
+✔ **Testes unitários e de integração completos**  
 
-Caso sua solução seja aprovada, você será avisado, e a empresa lhe informará os próximos passos.
+---
 
-Se quiser documentar outros detalhes da sua solução (como *design patterns* e boas práticas utilizadas e outras decisões de projeto) pode mandar ver!
-Aliás, documente tudo o que você julgar necessário e interessante.
+## 🛠 **Tecnologias Utilizadas**
+🔹 **Java 21**  
+🔹 **Spring Boot 3**  
+🔹 **Spring Data JPA**  
+🔹 **Spring Security (Basic Auth)**  
+🔹 **MySQL Database**  
+🔹 **JUnit 5 & Mockito**  
+🔹 **Docker & Docker Compose**  
 
-Capriche também nos testes automatizados. Esperamos que a cobertura esteja alta. Mas, mais que isso: que os testes testem as classes de fato, e não apenas passem pelo código das classes que estão sendo testadas ;)
+---
 
-# Mini autorizador
+## 🚀 **Como Executar o Projeto**
+### 1️⃣ **Pré-requisitos**
+🔹 Instale o **Docker** e **Docker Compose**  
 
-A VR processa todos os dias diversas transações de Vale Refeição e Vale Alimentação, entre outras.
-De forma breve, as transações saem das maquininhas de cartão e chegam até uma de nossas aplicações, conhecida como *autorizador*, que realiza uma série de verificações e análises. Essas também são conhecidas como *regras de autorização*.
-
-Ao final do processo, o autorizador toma uma decisão, aprovando ou não a transação:
-* se aprovada, o valor da transação é debitado do saldo disponível do benefício, e informamos à maquininha que tudo ocorreu bem.
-* senão, apenas informamos o que impede a transação de ser feita e o processo se encerra.
-
-Sua tarefa será construir um *mini-autorizador*. Este será uma aplicação Spring Boot com interface totalmente REST que permita:
-
-* a criação de cartões (todo cartão deverá ser criado com um saldo inicial de R$500,00)
-* a obtenção de saldo do cartão
-* a autorização de transações realizadas usando os cartões previamente criados como meio de pagamento
-
-## Regras de autorização a serem implementadas
-
-Uma transação pode ser autorizada se:
-* o cartão existir
-* a senha do cartão for a correta
-* o cartão possuir saldo disponível
-
-Caso uma dessas regras não ser atendida, a transação não será autorizada.
-
-## Demais instruções
-
-O projeto contém um docker-compose.yml com 1 banco de dados relacional e outro não relacional.
-Sinta-se à vontade para utilizar um deles. Se quiser, pode deixar comentado o banco que não for utilizar, mas não altere o que foi declarado para o banco que você selecionou.
-
-Não é necessário persistir a transação. Mas é necessário persistir o cartão criado e alterar o saldo do cartão caso uma transação ser autorizada pelo sistema.
-
-Serão analisados o estilo e a qualidade do seu código, bem como as técnicas utilizadas para sua escrita.
-
-Também, na avaliação da sua solução, serão realizados os seguintes testes, nesta ordem:
-
-* criação de um cartão
-* verificação do saldo do cartão recém-criado
-* realização de diversas transações, verificando-se o saldo em seguida, até que o sistema retorne informação de saldo insuficiente
-* realização de uma transação com senha inválida
-* realização de uma transação com cartão inexistente
-
-Esses testes serão realizados:
-* rodando o docker-compose enviado para você
-* rodando a aplicação
-
-Para isso, é importante que os contratos abaixo sejam respeitados:
-
-## Contratos dos serviços
-
-### Criar novo cartão
+### 2️⃣ **Rodando a Aplicação**
+```sh
+docker-compose up -d
+./mvnw spring-boot:run
 ```
-Method: POST
-URL: http://localhost:8080/cartoes
-Body (json):
+
+---
+
+## 🎯 **Endpoints da API**
+### 📌 **1️⃣ Criar um Novo Cartão**
+```
+POST /cartoes
+Autenticação: Basic Auth (username/password)
+```
+🔹 **Exemplo de Requisição:**
+```json
 {
-    "numeroCartao": "6549873025634501",
-    "senha": "1234"
+  "numeroCartao": "1234567890123456",
+  "senha": "1234"
 }
-Autenticação: BASIC, com login = username e senha = password
 ```
-#### Possíveis respostas:
-```
-Criação com sucesso:
-   Status Code: 201
-   Body (json):
-   {
-      "senha": "1234",
-      "numeroCartao": "6549873025634501"
-   } 
------------------------------------------
-Caso o cartão já exista:
-   Status Code: 422
-   Body (json):
-   {
-      "senha": "1234",
-      "numeroCartao": "6549873025634501"
-   }
------------------------------------------
-Erro de autenticação: 401 
-```
+🔹 **Respostas:**
+| Código | Resposta |
+|--------|----------|
+| **201 Created** ✅ | Cartão criado com sucesso |
+| **422 Unprocessable Entity** ❌ | Cartão já existe |
 
-### Obter saldo do Cartão
-```
-Method: GET
-URL: http://localhost:8080/cartoes/{numeroCartao} , onde {numeroCartao} é o número do cartão que se deseja consultar
-Autenticação: BASIC, com login = username e senha = password
-```
+---
 
-#### Possíveis respostas:
+### 📌 **2️⃣ Consultar Saldo**
 ```
-Obtenção com sucesso:
-   Status Code: 200
-   Body: 495.15 
------------------------------------------
-Caso o cartão não exista:
-   Status Code: 404 
-   Sem Body
------------------------------------------
-Erro de autenticação: 401 
+GET /cartoes/{numeroCartao}
+Autenticação: Basic Auth (username/password)
 ```
+🔹 **Respostas:**
+| Código | Resposta |
+|--------|----------|
+| **200 OK** ✅ | Retorna o saldo do cartão |
+| **404 Not Found** ❌ | Cartão não encontrado |
 
-### Realizar uma Transação
+---
+
+### 📌 **3️⃣ Realizar uma Transação**
 ```
-Method: POST
-URL: http://localhost:8080/transacoes
-Body (json):
+POST /transacoes
+Autenticação: Basic Auth (username/password)
+```
+🔹 **Exemplo de Requisição:**
+```json
 {
-    "numeroCartao": "6549873025634501",
-    "senhaCartao": "1234",
-    "valor": 10.00
+  "numeroCartao": "1234567890123456",
+  "senhaCartao": "1234",
+  "valor": 10.00
 }
-Autenticação: BASIC, com login = username e senha = password
 ```
+🔹 **Respostas:**
+| Código | Resposta |
+|--------|----------|
+| **201 Created** ✅ | Transação aprovada |
+| **422 Unprocessable Entity** ❌ | `SALDO_INSUFICIENTE`, `SENHA_INVALIDA`, `CARTAO_INEXISTENTE` |
 
-#### Possíveis respostas:
-```
-Transação realizada com sucesso:
-   Status Code: 201
-   Body: OK 
------------------------------------------
-Caso alguma regra de autorização tenha barrado a mesma:
-   Status Code: 422 
-   Body: SALDO_INSUFICIENTE|SENHA_INVALIDA|CARTAO_INEXISTENTE (dependendo da regra que impediu a autorização)
------------------------------------------
-Erro de autenticação: 401 
-```
+---
 
-Desafios (não obrigatórios):
-* é possível construir a solução inteira sem utilizar nenhum if. Só não pode usar *break* e *continue*! Conceitos de orientação a objetos ajudam bastante!
-* como garantir que 2 transações disparadas ao mesmo tempo não causem problemas relacionados à concorrência?
-  Exemplo: dado que um cartão possua R$10.00 de saldo. Se fizermos 2 transações de R$10.00 ao mesmo tempo, em instâncias diferentes da aplicação, como o sistema deverá se comportar?
+## 🧪 **Rodando os Testes**
+Para rodar os testes unitários e de integração:
+```sh
+./mvnw test
+```
+✔ **Cobertura completa das regras de negócio**  
+✔ **Testes de Service e Controller com `MockMvc`**  
+✔ **Verificação de concorrência e segurança**
+
+---
+
+## 📌 **Autor**
+👤 **Francisco Edglei de Sousa**
+
+---
