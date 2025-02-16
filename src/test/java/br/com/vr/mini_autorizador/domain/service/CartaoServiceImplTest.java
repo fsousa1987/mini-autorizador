@@ -17,8 +17,8 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static br.com.vr.mini_autorizador.factory.CardFactory.criarUmCartaoEntity;
-import static br.com.vr.mini_autorizador.factory.CardFactory.criarUmCartaoRequest;
+import static br.com.vr.mini_autorizador.factory.CartaoFactory.criarUmCartaoEntity;
+import static br.com.vr.mini_autorizador.factory.CartaoFactory.criarUmCartaoRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

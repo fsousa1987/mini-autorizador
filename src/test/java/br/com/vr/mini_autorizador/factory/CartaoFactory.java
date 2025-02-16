@@ -5,7 +5,7 @@ import br.com.vr.mini_autorizador.domain.model.CartaoEntity;
 
 import java.math.BigDecimal;
 
-public class CardFactory {
+public class CartaoFactory {
 
     public static CartaoRequest criarUmCartaoRequest() {
         return CartaoRequest.builder()
