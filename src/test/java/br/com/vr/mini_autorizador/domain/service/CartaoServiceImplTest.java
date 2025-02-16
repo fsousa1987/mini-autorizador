@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static br.com.vr.mini_autorizador.factory.CardFactory.criarUmCartaoEntity;
+import static br.com.vr.mini_autorizador.factory.CardFactory.criarUmCartaoRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -45,8 +47,8 @@ public class CartaoServiceImplTest {
 
     @Test
     void deveCriarCartaoComSucesso() {
-        CartaoRequest request = new CartaoRequest("1234567890123456", "1234");
-        CartaoEntity entity = new CartaoEntity("1234567890123456", "1234", BigDecimal.valueOf(500));
+        CartaoRequest request = criarUmCartaoRequest();
+        CartaoEntity entity = criarUmCartaoEntity();
         when(cartaoRepository.findById(request.numeroCartao())).thenReturn(Optional.empty());
         when(cartaoRepository.save(any(CartaoEntity.class))).thenReturn(entity);
 
@@ -59,8 +61,8 @@ public class CartaoServiceImplTest {
 
     @Test
     void deveRetornarCartaoQuandoCartaoExiste() {
-        CartaoRequest request = new CartaoRequest("1234567890123456", "1234");
-        CartaoEntity entity = new CartaoEntity("1234567890123456", "1234", BigDecimal.valueOf(500));
+        CartaoRequest request = criarUmCartaoRequest();
+        CartaoEntity entity = criarUmCartaoEntity();
 
         when(cartaoRepository.findById(request.numeroCartao())).thenReturn(Optional.of(entity));
 
@@ -72,12 +74,13 @@ public class CartaoServiceImplTest {
 
     @Test
     void deveRetornarSaldoCorreto() {
-        CartaoEntity entity = new CartaoEntity("1234567890123456", "1234", BigDecimal.valueOf(300));
+        CartaoEntity entity = criarUmCartaoEntity();
+
         when(cartaoRepository.findById("1234567890123456")).thenReturn(Optional.of(entity));
 
         Optional<SaldoResponse> saldoResponse = cartaoService.verificarSaldo("1234567890123456");
 
-        saldoResponse.ifPresent(valor -> assertEquals(BigDecimal.valueOf(300), valor.saldo()));
+        saldoResponse.ifPresent(valor -> assertEquals(BigDecimal.valueOf(500), valor.saldo()));
     }
 
 }

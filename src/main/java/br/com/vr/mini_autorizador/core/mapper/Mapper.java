@@ -9,14 +9,17 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public CartaoEntity transformarCartaoRequestEmCartaoEntity(CartaoRequest cartaoRequest) {
-        CartaoEntity cartaoEntity = new CartaoEntity();
-        cartaoEntity.setNumeroCartao(cartaoRequest.numeroCartao());
-        cartaoEntity.setSenha(cartaoRequest.senha());
-        return cartaoEntity;
+        return CartaoEntity.builder()
+                .numeroCartao(cartaoRequest.numeroCartao())
+                .senha(cartaoRequest.senha())
+                .build();
     }
 
     public CartaoResponse transformarCartaoEntityEmCartaoResponse(CartaoEntity cartaoEntity) {
-        return new CartaoResponse(cartaoEntity.getSenha(), cartaoEntity.getNumeroCartao());
+        return CartaoResponse.builder()
+                .senha(cartaoEntity.getSenha())
+                .numeroCartao(cartaoEntity.getNumeroCartao())
+                .build();
     }
 
 }

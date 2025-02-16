@@ -1,15 +1,10 @@
 package br.com.vr.mini_autorizador.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Entity
 @Table(name = "cartao")
@@ -17,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CartaoEntity {
 
     @Id
@@ -26,6 +22,12 @@ public class CartaoEntity {
     private String senha;
 
     @Column(nullable = false)
-    private BigDecimal saldo = BigDecimal.valueOf(500.00);
+    private BigDecimal saldo;
+
+    @PrePersist
+    public void inicializarSaldo() {
+        saldo = Optional.ofNullable(saldo).orElse(BigDecimal.valueOf(500.00));
+    }
 
 }
+
