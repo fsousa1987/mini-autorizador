@@ -14,7 +14,7 @@ Este sistema permite **criação de cartões, consulta de saldo e processamento 
 ✔ **Segurança** com **Basic Auth**  
 ✔ **Concorrência controlada** para evitar saldo negativo em múltiplas transações simultâneas  
 ✔ **Testes unitários e de integração completos**  
-
+✔ **Não foi utlizado Ifs no projeto**
 ---
 
 ## 🛠 **Tecnologias Utilizadas**
